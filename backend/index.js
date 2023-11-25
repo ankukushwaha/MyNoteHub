@@ -2,6 +2,7 @@ import express from "express";
 import notes from "./routes/notes.js";
 import connectToDB from "./db.js";
 import signup from "./routes/signup.js";
+import login from "./routes/login.js";
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 connectToDB();
 
 app.use("/signup", signup);
+app.use("/login", login);
 
 app.use("/", notes);
 
