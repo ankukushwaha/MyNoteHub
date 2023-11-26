@@ -19,7 +19,7 @@ router.put("/:id",authenticateUser, async(req,res) => {
     let note = await Note.findById(req.params.id);
     if(!note){return res.status(404).send("Not found")};
 
-    if(note.user.toString() != req.user){
+    if(note.user.toString() !== req.user){
         return res.status(401).send("Not allowed");
     }
 
