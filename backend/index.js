@@ -1,8 +1,8 @@
 import express from "express";
-import notes from "./routes/notes.js";
 import connectToDB from "./db.js";
 import signup from "./routes/signup.js";
 import login from "./routes/login.js";
+import addNote from "./routes/addNotes.js";
 
 const app = express();
 
@@ -13,8 +13,7 @@ connectToDB();
 
 app.use("/signup", signup);
 app.use("/login", login);
-
-app.use("/", notes);
+app.use("/addnote", addNote);
 
 app.listen(4000, (req,res) => {
     console.log("Server is listening to port 4000");
