@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SignUp(){
+    const navigate = useNavigate();
     const [detail, setDetail] = useState({
         username: "",
         email: "",
@@ -17,18 +19,33 @@ function SignUp(){
         })
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`http://localhost:4000/signup`, {
-            method: "POST", 
+        try {
+          const response = await fetch(`http://localhost:4000/signup`, {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(detail), 
+            body: JSON.stringify(detail),
           });
-          const json =  await response.json();
-          console.log(json);
-    }
+      
+          if (response.ok) {
+            const json = await response.json();
+            console.log(json);
+            setDetail({username: "",
+            email: "",
+            password: ""});
+            navigate("/login");
+          } else {
+            // Handle errors here
+            console.error("Signup failed");
+          }
+        } catch (error) {
+          console.error("Error during signup:", error.message);
+        }
+      };
+      
 
     return(
         <form>
@@ -49,7 +66,7 @@ function SignUp(){
                 <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                 <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
             </div>
-            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
+            <button type="submit" className="btn btn-primary" onClick={handleSubmit}>SignUp</button>
         </form>
     )
 }

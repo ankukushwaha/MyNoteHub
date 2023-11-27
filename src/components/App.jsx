@@ -130,10 +130,6 @@ function App() {
       })
     }
 
-  async function handleSignup(e){
-    
-  }
-
   return (
     <Router>
     <div>
