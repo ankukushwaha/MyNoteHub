@@ -6,9 +6,10 @@ import addNote from "./routes/addNotes.js";
 import fetchNotes from "./routes/fetchNotes.js";
 import updateNotes from "./routes/updateNote.js";
 import deleteNotes from "./routes/deleteNote.js";
-
+import cors from "cors";
 
 const app = express();
+app.use(cors());
 
 // middleware 
 app.use(express.json());

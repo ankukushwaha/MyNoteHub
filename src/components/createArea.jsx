@@ -4,7 +4,6 @@ import Zoom from '@mui/material/Zoom';
 import Fab from '@mui/material/Fab';
 
 function CreateArea(props) {
-
   return (
     <div className="create-note">
       <form>

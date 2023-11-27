@@ -3,6 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 
 function Note(props) {
+ 
   return (
     <div className="note">
       <h1>{props.Title}</h1>

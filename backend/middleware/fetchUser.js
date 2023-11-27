@@ -1,12 +1,17 @@
 // authMiddleware.js
+import express from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
+const app = express();
+app.use(cookieParser());
 
 const authenticateUser = (req, res, next) => {
     // Extract the token from the request, for example, from the Authorization header
-    const token = req.header('Cookie');
+    // const token = req.header('Cookie');
+    const token = req.header("access-token");
 
     // Check if token exists
     if (!token) {
