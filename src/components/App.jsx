@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import Footer from "./footer";
 import Note from "./Note";
@@ -50,53 +50,92 @@ function App() {
     }
 
     // get notes
-    async function getNotes(){
-      const response = await fetch(`http://localhost:4000/fetchnotes`, {
-        method: "GET", 
-        headers: {
-          "Content-Type": "application/json",
-          "acess-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMDk4OTQyNH0.jaArN9m7aPcaxZk4qVdrEgO8TPdhQ3lBqPhxyWvIOt8"
-        },
-      });
-      const json =  await response.json();
+    async function getNotes() {
+      try {
+        const response = await fetch(`http://localhost:4000/fetchnotes`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMTE0ODA3NX0.3srQgcCxJ9Yf0PfPHvlLvWP-8UdyjafTwaIMV2_qm54"
+          },
+        });
+    
+        const json = await response.json();
+        console.log(json);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        setAddedItems(json);
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+        // Handle the error appropriately, e.g., show a message to the user
+      }
     }
+    
+
+    useEffect(() => {
+      getNotes();
+    }, [])
 
     // adding items 
-    async function onClick(val){
-      const response = await fetch(`http://localhost:4000/addnote`, {
-        method: "POST", 
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMDk4OTQyNH0.jaArN9m7aPcaxZk4qVdrEgO8TPdhQ3lBqPhxyWvIOt8"
-        },
-        body: JSON.stringify(val), 
-      });
-      const json =  await response.json();
-
-        setAddedItems((prevValue) => {
-            return [...prevValue, val];
+    async function onClick(val) {
+      try {
+        const response = await fetch(`http://localhost:4000/addnote`, {
+          method: "POST", 
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMTE0ODA3NX0.3srQgcCxJ9Yf0PfPHvlLvWP-8UdyjafTwaIMV2_qm54"
+          },
+          body: JSON.stringify(val), 
         });
-    }
+      
+        const json = await response.json();
+        console.log(json);
 
-    // deleting the added notes 
-    async function handleDelete(id){
-      const response = await fetch(`http://localhost:4000/delete/${id}`, {
-        method: "Delete", 
-        headers: {
-          "Content-Type": "application/json",
-          "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMDk4OTQyNH0.jaArN9m7aPcaxZk4qVdrEgO8TPdhQ3lBqPhxyWvIOt8"
-        },
-        // body: JSON.stringify({title, content, tag}), 
-      });
-      // const json =  response.json();
-
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status} ${json}`);
+        }
+        
         setAddedItems((prevValue) => {
-            return prevValue.filter((value, index) => {
-                return index !== id;
-            })
-        })
+          return [...prevValue, val];
+        });
+      } catch (error) {
+        console.error("Error adding note:", error);
+        // Handle the error appropriately, e.g., show a message to the user
+      }
     }
+    
+    // deleting the added notes 
+    async function handleDelete(id) {
+      try {
+        const response = await fetch(`http://localhost:4000/delete/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMTE0ODA3NX0.3srQgcCxJ9Yf0PfPHvlLvWP-8UdyjafTwaIMV2_qm54",
+          },
+        });
+           
+        const json = await response.json();
+        console.log(json);
 
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        setAddedItems((prevValue) => {
+          return prevValue.filter((value) => {
+            return value._id !== id;
+          });
+        })
+
+      } catch (error) {
+        console.error("Error deleting:", error);
+      }
+    }
+    
     // for updating the notes 
     const modalRef = useRef(null);
     const [id, setId] = useState(null);
@@ -134,8 +173,7 @@ function App() {
     <Router>
     <div>
       <Header />
-
-      
+    
       <Routes>
           <Route path="/"
            element =  {
@@ -143,7 +181,7 @@ function App() {
               <Modal modalRef={modalRef}  handleChange={ehandleChange} items={eItems} update={handleUpdate} index={id} />
               <CreateArea click={onClick} items={items} setItems={setItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue}/>
               {addedItems.map((item,index) => {
-                return <Note key={index} id={index} Title={item.title} Content = {item.content} delete={handleDelete} edit={handleEdit} note={item} />
+                return <Note key={index} id={item._id} Title={item.title} Content = {item.content} delete={handleDelete} edit={handleEdit} note={item}/>
               })}
             </div>
             }/>

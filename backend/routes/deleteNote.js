@@ -11,7 +11,7 @@ router.delete("/:id", authenticateUser, async(req,res) => {
 
     if(notes.user.toString() !== req.user){return res.status(401).send("Not allowed")};
 
-    Note.findByIdAndDelete(req.params.id).then(() => res.send("deleted successfully"))
+    Note.findByIdAndDelete(req.params.id).then(() => res.json(notes))
     .catch((err) => res.json({err}));
 })
 

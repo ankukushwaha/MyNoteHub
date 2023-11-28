@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function SignUp(){
     const navigate = useNavigate();
@@ -48,6 +49,7 @@ function SignUp(){
       
 
     return(
+        <>
         <form>
             <div className="mb-3">
                 <label htmlFor="exampleInputUsername1" className="form-label">User Name</label>
@@ -68,6 +70,13 @@ function SignUp(){
             </div>
             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>SignUp</button>
         </form>
+        <div className="d-flex justify-content-center ">
+            <p className="m-1 text-center">Have an account</p>
+            <Link to="/login" className="m-1" > 
+                <span>Login</span>
+            </Link>
+        </div>
+        </>
     )
 }
 

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Login(){
+    const navigate = useNavigate();
     const [data, setData] = useState({
         email: "",
         password: ""
@@ -33,6 +36,7 @@ function Login(){
             setData({
             email: "",
             password: ""});
+            navigate("/")
           } else {
             // Handle errors here
             console.error("Login failed");
@@ -43,6 +47,7 @@ function Login(){
     }
     
     return(
+        <>
         <form>
             <div className="mb-3">
                 <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
@@ -59,6 +64,13 @@ function Login(){
             </div>
             <button type="submit" className="btn btn-primary" onClick={handleSubmit}>Login</button>
         </form>
+        <div className="d-flex justify-content-center ">
+            <p className="m-1 text-center">Don't have an account</p>
+            <Link to="/signup" className="m-1" > 
+                <span>SignUp</span>
+            </Link>
+        </div>
+        </>
     )
 }
 
