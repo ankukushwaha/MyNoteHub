@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import Footer from "./footer";
 import Note from "./Note";
@@ -6,7 +6,7 @@ import CreateArea from "./createArea";
 import Login from "./Login";
 import SignUp from "./Signup";
 import About from "./About";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {BrowserRouter as Router,  Routes, Route } from "react-router-dom";
 
 function App() {
     const [addedItems, setAddedItems] = useState([])
@@ -33,36 +33,6 @@ function App() {
         setIsTrue(true);
     }
 
-    // get notes
-    async function getNotes() {
-      try {
-        const response = await fetch(`http://localhost:4000/fetchnotes`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMTE0ODA3NX0.3srQgcCxJ9Yf0PfPHvlLvWP-8UdyjafTwaIMV2_qm54"
-          },
-        });
-    
-        const json = await response.json();
-        console.log(json);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-    
-        setAddedItems(json);
-      } catch (error) {
-        console.error("Error fetching notes:", error);
-        // Handle the error appropriately, e.g., show a message to the user
-      }
-    }
-
-    useEffect(() => {
-      getNotes();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
     // adding items 
     async function onClick(val) {
       try {
@@ -70,7 +40,7 @@ function App() {
           method: "POST", 
           headers: {
             "Content-Type": "application/json",
-            "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMTE0ODA3NX0.3srQgcCxJ9Yf0PfPHvlLvWP-8UdyjafTwaIMV2_qm54"
+            "access-token": localStorage.getItem('token')
           },
           body: JSON.stringify(val), 
         });
@@ -97,7 +67,7 @@ function App() {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMTE0ODA3NX0.3srQgcCxJ9Yf0PfPHvlLvWP-8UdyjafTwaIMV2_qm54",
+            "access-token": localStorage.getItem('token'),
           },
         });
            
@@ -128,7 +98,7 @@ function App() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMTE0ODA3NX0.3srQgcCxJ9Yf0PfPHvlLvWP-8UdyjafTwaIMV2_qm54"
+            "access-token": localStorage.getItem('token')
           },
           body: JSON.stringify({id, title, content, tag}),
         });
@@ -165,10 +135,10 @@ function App() {
           <Route path="/"
            element =  {
            <div>
-              <CreateArea click={onClick} items={items} setItems={setItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue}/>
+              <CreateArea click={onClick} items={items} setItems={setItems} setAddedItems={setAddedItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue}/>
               {addedItems.map((item,index) => {
                 return <Note key={index} delete={handleDelete} note={item}
-                update={handleUpdate} getNotes={getNotes}/>
+                update={handleUpdate} />
               })}
             </div>
             }/>
@@ -178,11 +148,13 @@ function App() {
             element = {<Login />} />
           <Route path="/signup"
             element = {<SignUp />} />
+          <Route path="/logout"
+            element = {<Login />} />
       </Routes>
 
       <Footer />
     </div>
-    </Router>
+  </Router> 
   );
 }
 
