@@ -35,13 +35,10 @@ function Note(props) {
   }
   
   function handleEdit(currentNote){
-    console.log("Editing note with ID:", currentNote._id);
-    console.log("Editing note with note:", currentNote);
     modalRef.current.click();
   }
   
   function handleClick(){
-    console.log(eItems)
     props.update(eItems.id, eItems.eTitle, eItems.eContent, eItems.eTag);
     refClose.current.click();
   }

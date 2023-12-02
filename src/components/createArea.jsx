@@ -17,9 +17,7 @@ function CreateArea(props) {
         },
       });
   
-      console.log(localStorage.getItem('token'));
       const json = await response.json();
-      console.log(json);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

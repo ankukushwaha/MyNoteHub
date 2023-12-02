@@ -46,7 +46,6 @@ function App() {
         });
       
         const json = await response.json();
-        console.log(json);
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status} ${json}`);
@@ -92,7 +91,6 @@ function App() {
     // for updating the notes 
 
     async function handleUpdate(id, title, content, tag) {
-    console.log(id);
       try {
         const response = await fetch(`http://localhost:4000/update/${id}`, {
           method: "PUT",
