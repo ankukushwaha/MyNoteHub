@@ -1,8 +1,15 @@
 import React from "react";
 import HighlightIcon from "@mui/icons-material/Highlight";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
+
+  function handleLogout(){
+    localStorage.removeItem('token');
+    navigate("/login");
+  }
+
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="container-fluid">
@@ -38,12 +45,15 @@ function Header() {
             </li>
           </ul>
         </div>
-          <Link to="/login"><button type="button" className="btn btn-primary m-3">
-            Login
-          </button></Link>
-          <Link to="/signup"><button type="button" className="btn btn-primary m-3">
-            Signup
-          </button></Link>
+          {!localStorage.getItem('token') ? <div>
+            <Link to="/login"><button type="button" className="btn btn-primary m-3">
+              Login
+            </button></Link>
+            <Link to="/signup"><button type="button" className="btn btn-primary m-3">
+              Signup
+            </button></Link>
+          </div>:<Link to="/logout"><button type="button" className="btn btn-primary" onClick={handleLogout}>
+          Logout</button></Link>}
       </div>
     </nav>
   );
