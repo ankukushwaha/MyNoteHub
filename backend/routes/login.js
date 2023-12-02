@@ -16,7 +16,7 @@ router.post("/", (req,res) => {
                     const token = jwt.sign({ id : foundUser._id }, process.env.JWT_SECRET);
                     // hiding password to sent with other informations 
                     const {password: pass, ...rest} = foundUser._doc;
-                    res.cookie('access token', token, { httpOnly: true }).status(200).json(rest);
+                    res.cookie('access token', token, { httpOnly: true }).status(200).json({rest, token});
                 }
                 else{
                     res.status(500).json({error: "please enter correct credentials"}); 

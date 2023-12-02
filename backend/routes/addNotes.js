@@ -14,8 +14,8 @@ router.post("/", async(req,res) => {
     const {title, content , tag} = req.body;
     const newNote = new Note({user: req.user, title, content, tag });
     try {
-        await newNote.save();
-        res.status(201).json({ message: "Note added successfully", user_id: req.user });
+        const savedNote = await newNote.save();
+        res.status(201).json(savedNote);
     } catch (error) {
         res.status(500).json({error: error.message});
     }

@@ -33,6 +33,7 @@ function Login(){
           if (response.ok) {
             const json = await response.json();
             console.log(json);
+            localStorage.setItem('token', json.token); 
             setData({
             email: "",
             password: ""});

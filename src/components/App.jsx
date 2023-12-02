@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./footer";
 import Note from "./Note";
 import CreateArea from "./createArea";
-import Modal from "./modal";
 import Login from "./Login";
 import SignUp from "./Signup";
 import About from "./About";
@@ -13,29 +12,14 @@ function App() {
     const [addedItems, setAddedItems] = useState([])
     const [items, setItems] = useState({
       title: "",
-      content: ""
+      content: "",
+      tag: ""
     })
 
     function handleChange(event){
         const {name, value} = event.target;
 
         setItems((prevValue) => {
-            return {
-                ...prevValue,
-                [name] : value
-            }
-        })
-    }
-
-    const [eItems, eSetItems] = useState({
-      eTitle: "",
-      eContent: ""
-    })
-
-    function ehandleChange(event){
-        const {name, value} = event.target;
-
-        eSetItems((prevValue) => {
             return {
                 ...prevValue,
                 [name] : value
@@ -62,7 +46,7 @@ function App() {
     
         const json = await response.json();
         console.log(json);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -73,10 +57,10 @@ function App() {
         // Handle the error appropriately, e.g., show a message to the user
       }
     }
-    
 
     useEffect(() => {
       getNotes();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // adding items 
@@ -97,9 +81,8 @@ function App() {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status} ${json}`);
         }
-        
         setAddedItems((prevValue) => {
-          return [...prevValue, val];
+          return [...prevValue, json];
         });
       } catch (error) {
         console.error("Error adding note:", error);
@@ -108,9 +91,9 @@ function App() {
     }
     
     // deleting the added notes 
-    async function handleDelete(id) {
+    async function handleDelete(ids) {
       try {
-        const response = await fetch(`http://localhost:4000/delete/${id}`, {
+        const response = await fetch(`http://localhost:4000/delete/${ids}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -127,7 +110,7 @@ function App() {
     
         setAddedItems((prevValue) => {
           return prevValue.filter((value) => {
-            return value._id !== id;
+            return value._id !== ids;
           });
         })
 
@@ -137,38 +120,42 @@ function App() {
     }
     
     // for updating the notes 
-    const modalRef = useRef(null);
-    const [id, setId] = useState(null);
 
-    function handleEdit(currentNote, index){
-      modalRef.current.click();
-      eSetItems({eTitle: currentNote.title, eContent: currentNote.content });
-      setId(index);
+    async function handleUpdate(id, title, content, tag) {
+    console.log(id);
+      try {
+        const response = await fetch(`http://localhost:4000/update/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "access-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMTE0ODA3NX0.3srQgcCxJ9Yf0PfPHvlLvWP-8UdyjafTwaIMV2_qm54"
+          },
+          body: JSON.stringify({id, title, content, tag}),
+        });
+    
+        const json = await response.json();
+        console.log(json);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        // let newNotes = JSON.parse(JSON.stringify())
+
+        setAddedItems((prevValue) => {
+          return prevValue.map((item) => {
+            if (item._id === id) {
+              return {_id:id, title: title, content: content, tag: tag };
+            } else {
+              return item;
+            }
+          });
+        });
+      } catch (error) {
+        console.error("Error updating note:", error);
+      }
     }
-
-    async function handleUpdate(id){
-      const response = await fetch(`http://localhost:4000/update/${id}`, {
-        method: "PUT", 
-        headers: {
-          "Content-Type": "application/json",
-          "Cookie": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NjA1YjA5YWU5OWVhOGRkYzljMjkyNCIsImlhdCI6MTcwMDk4OTQyNH0.jaArN9m7aPcaxZk4qVdrEgO8TPdhQ3lBqPhxyWvIOt8"
-        },
-        // body: JSON.stringify({title, content, tag}), 
-      });
-      // const json =  response.json();
-
-      setAddedItems((prevValue) => {
-        return prevValue.map((item, index) => {
-          if(index === id){
-            return {title: eItems.eTitle, content: eItems.eContent};
-          }
-          else{
-            return item;
-          }
-        })
-      })
-    }
-
+    
   return (
     <Router>
     <div>
@@ -178,10 +165,10 @@ function App() {
           <Route path="/"
            element =  {
            <div>
-              <Modal modalRef={modalRef}  handleChange={ehandleChange} items={eItems} update={handleUpdate} index={id} />
               <CreateArea click={onClick} items={items} setItems={setItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue}/>
               {addedItems.map((item,index) => {
-                return <Note key={index} id={item._id} Title={item.title} Content = {item.content} delete={handleDelete} edit={handleEdit} note={item}/>
+                return <Note key={index} delete={handleDelete} note={item}
+                update={handleUpdate} getNotes={getNotes}/>
               })}
             </div>
             }/>
