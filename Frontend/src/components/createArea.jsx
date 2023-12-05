@@ -9,7 +9,7 @@ function CreateArea(props) {
   // get notes
   async function getNotes() {
     try {
-      const response = await fetch(`http://localhost:4000/fetchnotes`, {
+      const response = await fetch(`https://mynotehub.onrender.com/fetchnotes`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

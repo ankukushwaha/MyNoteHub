@@ -36,7 +36,7 @@ function App() {
     // adding items 
     async function onClick(val) {
       try {
-        const response = await fetch(`http://localhost:4000/addnote`, {
+        const response = await fetch(`https://mynotehub.onrender.com/addnote`, {
           method: "POST", 
           headers: {
             "Content-Type": "application/json",
@@ -62,7 +62,7 @@ function App() {
     // deleting the added notes 
     async function handleDelete(ids) {
       try {
-        const response = await fetch(`http://localhost:4000/delete/${ids}`, {
+        const response = await fetch(`https://mynotehub.onrender.com/delete/${ids}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -92,7 +92,7 @@ function App() {
 
     async function handleUpdate(id, title, content, tag) {
       try {
-        const response = await fetch(`http://localhost:4000/update/${id}`, {
+        const response = await fetch(`https://mynotehub.onrender.com/update/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
