@@ -44,7 +44,6 @@ function Header() {
               </Link>
             </li>
           </ul>
-        </div>
           {!localStorage.getItem('token') ? <div>
             <Link to="/login"><button type="button" className="btn btn-primary m-3">
               Login
@@ -54,6 +53,7 @@ function Header() {
             </button></Link>
           </div>:<Link to="/logout"><button type="button" className="btn btn-primary" onClick={handleLogout}>
           Logout</button></Link>}
+        </div>
       </div>
     </nav>
   );
