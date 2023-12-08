@@ -9,6 +9,7 @@ html {
 body {
   background: #eee;
   padding: 0 16px;
+  height: 100vh;
   /* background-color: #338c00;  */
   background-image: url("https://www.transparenttextures.com/patterns/brick-wall.png");
 }
@@ -27,6 +28,10 @@ nav h1 {
 
 .nav-link{
   font-size: 1.5rem;
+}
+
+.alert{
+  width: 101%;
 }
 
 footer {

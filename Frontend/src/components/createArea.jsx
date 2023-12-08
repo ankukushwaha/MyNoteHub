@@ -26,6 +26,7 @@ function CreateArea(props) {
       props.setAddedItems(json);
     } catch (error) {
       console.error("Error fetching notes:", error);
+      props.showAlert("Error fetching notes:", "danger");
       // Handle the error appropriately, e.g., show a message to the user
     }
   }
@@ -36,6 +37,7 @@ function CreateArea(props) {
       getNotes();
     }
     else{
+      props.showAlert("Login First", "danger");
       navigate("/login");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

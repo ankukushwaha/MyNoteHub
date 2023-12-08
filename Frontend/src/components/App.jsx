@@ -7,8 +7,20 @@ import Login from "./Login";
 import SignUp from "./Signup";
 import About from "./About";
 import {BrowserRouter as Router,  Routes, Route } from "react-router-dom";
+import Alert from "./Alert";
 
 function App() {
+    const [alert, setAlert] = useState(null);
+    function showAlert(message, type){
+      setAlert({
+        msg: message,
+        type: type
+      })
+      setTimeout(() => {
+        setAlert(null);
+      },2000);
+    }
+
     const [addedItems, setAddedItems] = useState([])
     const [items, setItems] = useState({
       title: "",
@@ -46,13 +58,16 @@ function App() {
         });
       
         const json = await response.json();
+        console.log(json)
 
         if (!response.ok) {
+          showAlert(`${json.error}`, "danger");
           throw new Error(`HTTP error! Status: ${response.status} ${json}`);
         }
         setAddedItems((prevValue) => {
           return [...prevValue, json];
         });
+        showAlert("Items added successfully", "success");
       } catch (error) {
         console.error("Error adding note:", error);
         // Handle the error appropriately, e.g., show a message to the user
@@ -82,6 +97,7 @@ function App() {
             return value._id !== ids;
           });
         })
+        showAlert("Items deleted successfully", "success");
 
       } catch (error) {
         console.error("Error deleting:", error);
@@ -119,6 +135,7 @@ function App() {
             }
           });
         });
+        showAlert("Items updated successfully", "success");
       } catch (error) {
         console.error("Error updating note:", error);
       }
@@ -127,13 +144,13 @@ function App() {
   return (
     <Router>
     <div>
-      <Header />
-    
+      <Header showAlert={showAlert}/>
+      <Alert alert={alert}/>
       <Routes>
           <Route path="/"
            element =  {
            <div>
-              <CreateArea click={onClick} items={items} setItems={setItems} setAddedItems={setAddedItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue}/>
+              <CreateArea click={onClick} items={items} setItems={setItems} setAddedItems={setAddedItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue} showAlert={showAlert}/>
               {addedItems.map((item,index) => {
                 return <Note key={index} delete={handleDelete} note={item}
                 update={handleUpdate} />
@@ -143,11 +160,9 @@ function App() {
           <Route path="/about"
            element =  {<About />} />
           <Route path="/login"
-            element = {<Login />} />
+            element = {<Login showAlert={showAlert}/>} />
           <Route path="/signup"
-            element = {<SignUp />} />
-          <Route path="/logout"
-            element = {<Login />} />
+            element = {<SignUp showAlert={showAlert}/>} />
       </Routes>
 
       <Footer />

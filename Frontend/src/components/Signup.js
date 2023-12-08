@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-function SignUp(){
+function SignUp(props){
     const navigate = useNavigate();
     const [detail, setDetail] = useState({
         username: "",
@@ -31,19 +31,28 @@ function SignUp(){
             body: JSON.stringify(detail),
           });
       
+          const json = await response.json();
+          if(json.error === "E11000 duplicate key error collection: keeperDB.users index: email_1 dup key: { email: \"hlw123@email.com\" }"){
+              json.error = "This email is already in use. Enter another email."
+          }
+          else if(json.error === "E11000 duplicate key error collection: keeperDB.users index: username_1 dup key: { username: \"hlww\" }"){
+            json.error = "User with this username already exists."
+          }
+
           if (response.ok) {
-            const json = await response.json();
-            console.log(json);
             setDetail({username: "",
             email: "",
             password: ""});
             navigate("/login");
+            props.showAlert("Account created successfully", "success");
           } else {
             // Handle errors here
             console.error("Signup failed");
+            props.showAlert(`${json.error}`, "danger");
           }
         } catch (error) {
           console.error("Error during signup:", error.message);
+          props.showAlert(`${error.message}`, "danger");
         }
       };
       

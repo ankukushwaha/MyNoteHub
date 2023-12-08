@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-function Login(){
+function Login(props){
     const navigate = useNavigate();
     const [data, setData] = useState({
         email: "",
@@ -30,16 +30,17 @@ function Login(){
             body: JSON.stringify(data),
           });
       
+          const json = await response.json();
           if (response.ok) {
-            const json = await response.json();
             localStorage.setItem('token', json.token); 
             setData({
             email: "",
             password: ""});
+            props.showAlert("Logged In Successfully", "success");
             navigate("/")
           } else {
             // Handle errors here
-            console.error("Login failed");
+            props.showAlert(`${json.error}`, "danger");
           }
         } catch (error) {
           console.error("Error during Login:", error.message);
