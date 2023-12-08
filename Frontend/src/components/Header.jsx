@@ -26,6 +26,7 @@ function Header(props) {
           aria-controls="navbarSupportedContent"
           aria-expanded="false"
           aria-label="Toggle navigation"
+          style={{backgroundColor: 'white'}}
         >
           <span className="navbar-toggler-icon"></span>
         </button>
