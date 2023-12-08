@@ -13,7 +13,7 @@ function Header(props) {
 
   return (
     <>
-    <nav className="navbar navbar-expand-lg">
+    <nav className="navbar navbar-expand-lg" style={{backgroundColor: props.mode==="light"?"#7e7e79":"black"}}>
       <div className="container-fluid">
         <h1>
           <HighlightIcon /> Keeper{" "}
@@ -46,6 +46,10 @@ function Header(props) {
               </Link>
             </li>
           </ul>
+          <div className="form-check form-switch">
+            <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onClick={props.toggle}/>
+            <label className="form-check-label text-white" htmlFor="flexSwitchCheckDefault">{props.mode === 'light'?"Dark Mode ": "Light Mode "}</label>
+          </div>
           {!localStorage.getItem('token') ? <div>
             <Link to="/login"><button type="button" className="btn btn-primary m-3">
               Login
@@ -53,8 +57,8 @@ function Header(props) {
             <Link to="/signup"><button type="button" className="btn btn-primary m-3">
               Signup
             </button></Link>
-          </div>:<Link to="/login"><button type="button" className="btn btn-primary" onClick={handleLogout}>
-          Logout</button></Link>}
+          </div>:<div className="mx-2"><Link to="/login"><button type="button" className="btn btn-primary" onClick={handleLogout}>
+          Logout</button></Link></div>}
         </div>
       </div>
     </nav>

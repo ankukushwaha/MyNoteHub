@@ -45,10 +45,10 @@ function CreateArea(props) {
 
   return (
     <div className="create-note container">
-      <form>
-        {props.isTrue && <input name="title" onChange={props.handleChange} value={props.items.title} placeholder="Title" required/>}
-        <textarea onClick={props.handleClick} name="content" onChange={props.handleChange} value={props.items.content} placeholder="Take a note..." rows="1" />
-        {props.isTrue && <input name="tag" onChange={props.handleChange} value={props.items.tag} placeholder="Tag" />}
+      <form style={{backgroundColor: props.mode === 'light'?'#fff':'#2c2a2a'}}>
+        {props.isTrue && <input name="title" onChange={props.handleChange} value={props.items.title} placeholder="Title" style={{backgroundColor: props.mode === 'light'?'#fff':'rgb(64 62 62)', color: props.mode === 'light'?'black':'white'}} required/>}
+        <textarea onClick={props.handleClick} name="content" onChange={props.handleChange} value={props.items.content} placeholder="Take a note..." rows="1" style={{backgroundColor: props.mode === 'light'?'#fff':'rgb(64 62 62)', color: props.mode === 'light'?'black':'white'}} />
+        {props.isTrue && <input name="tag" onChange={props.handleChange} value={props.items.tag} placeholder="Tag" style={{backgroundColor: props.mode === 'light'?'#fff':'rgb(64 62 62)', color: props.mode === 'light'?'black':'white'}}/>}
         <Zoom in={props.isTrue}>
         <Fab onClick={(event) => {
           const tagValue = props.items.tag.trim() === "" ? "general" : props.items.tag;
@@ -62,7 +62,7 @@ function CreateArea(props) {
                 content:"",
                 tag: ""
             })
-        }}><AddCircleIcon /></Fab>
+        }} className="mt-2"><AddCircleIcon /></Fab>
         </Zoom>
       </form>
     </div>

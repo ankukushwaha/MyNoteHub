@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Footer from "./footer";
 import Note from "./Note";
@@ -10,6 +10,8 @@ import {BrowserRouter as Router,  Routes, Route } from "react-router-dom";
 import Alert from "./Alert";
 
 function App() {
+
+  // alert component 
     const [alert, setAlert] = useState(null);
     function showAlert(message, type){
       setAlert({
@@ -20,7 +22,20 @@ function App() {
         setAlert(null);
       },2000);
     }
-
+  
+    // toggleMode
+    const savedMode = localStorage.getItem('mode') || 'dark'; 
+    const [mode, setMode] = useState(savedMode);
+    function toggleMode(){
+      setMode((prevMode) => (prevMode === 'dark'? 'light':'dark'));
+    }
+    useEffect(() => {
+      // Save the current mode to local storage whenever it changes
+      localStorage.setItem('mode', mode);
+      document.body.style.backgroundColor = mode === 'dark'?'rgb(4, 48, 72)': 'white';
+    }, [mode]);
+    
+    // notes 
     const [addedItems, setAddedItems] = useState([])
     const [items, setItems] = useState({
       title: "",
@@ -58,7 +73,6 @@ function App() {
         });
       
         const json = await response.json();
-        console.log(json)
 
         if (!response.ok) {
           showAlert(`${json.error}`, "danger");
@@ -144,28 +158,28 @@ function App() {
   return (
     <Router>
     <div>
-      <Header showAlert={showAlert}/>
+      <Header showAlert={showAlert} toggle={toggleMode} mode={mode}/>
       <Alert alert={alert}/>
       <Routes>
           <Route path="/"
            element =  {
            <div>
-              <CreateArea click={onClick} items={items} setItems={setItems} setAddedItems={setAddedItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue} showAlert={showAlert}/>
+              <CreateArea click={onClick} items={items} setItems={setItems} mode={mode} setAddedItems={setAddedItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue} showAlert={showAlert}/>
               {addedItems.map((item,index) => {
                 return <Note key={index} delete={handleDelete} note={item}
-                update={handleUpdate} />
+                update={handleUpdate} mode={mode}/>
               })}
             </div>
             }/>
           <Route path="/about"
            element =  {<About />} />
           <Route path="/login"
-            element = {<Login showAlert={showAlert}/>} />
+            element = {<Login showAlert={showAlert} mode={mode}/>} />
           <Route path="/signup"
-            element = {<SignUp showAlert={showAlert}/>} />
+            element = {<SignUp showAlert={showAlert} mode={mode}/>} />
       </Routes>
 
-      <Footer />
+      <Footer mode={mode}/>
     </div>
   </Router> 
   );

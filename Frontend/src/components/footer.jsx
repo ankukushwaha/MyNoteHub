@@ -1,9 +1,9 @@
 import React from "react";
 
-function Footer(){
+function Footer(props){
     return(
         <footer>
-            <p>Copyright ⓒ {new Date().getFullYear()}</p>
+            <p style={{color: props.mode === 'light'?'black':'white'}}>Copyright ⓒ {new Date().getFullYear()}</p>
         </footer>
     )
 }
