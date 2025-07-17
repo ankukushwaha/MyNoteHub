@@ -6,8 +6,10 @@ import CreateArea from "./createArea";
 import Login from "./Login";
 import SignUp from "./Signup";
 import About from "./About";
+import ChatDashboardDemo from "./ChatDashboardDemo";
 import {BrowserRouter as Router,  Routes, Route } from "react-router-dom";
 import Alert from "./Alert";
+import { ChatProvider } from "../context/ChatContext";
 
 function App() {
 
@@ -156,32 +158,36 @@ function App() {
     }
     
   return (
-    <Router>
-    <div>
-      <Header showAlert={showAlert} toggle={toggleMode} mode={mode}/>
-      <Alert alert={alert}/>
-      <Routes>
-          <Route path="/"
-           element =  {
-           <div>
-              <CreateArea click={onClick} items={items} setItems={setItems} mode={mode} setAddedItems={setAddedItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue} showAlert={showAlert}/>
-              {addedItems.map((item,index) => {
-                return <Note key={index} delete={handleDelete} note={item}
-                update={handleUpdate} mode={mode}/>
-              })}
-            </div>
-            }/>
-          <Route path="/about"
-           element =  {<About />} />
-          <Route path="/login"
-            element = {<Login showAlert={showAlert} mode={mode}/>} />
-          <Route path="/signup"
-            element = {<SignUp showAlert={showAlert} mode={mode}/>} />
-      </Routes>
+    <ChatProvider>
+      <Router>
+      <div>
+        <Header showAlert={showAlert} toggle={toggleMode} mode={mode}/>
+        <Alert alert={alert}/>
+        <Routes>
+            <Route path="/"
+             element =  {
+             <div>
+                <CreateArea click={onClick} items={items} setItems={setItems} mode={mode} setAddedItems={setAddedItems} handleChange={handleChange} handleClick={handleClick} isTrue={isTrue} showAlert={showAlert}/>
+                {addedItems.map((item,index) => {
+                  return <Note key={index} delete={handleDelete} note={item}
+                  update={handleUpdate} mode={mode}/>
+                })}
+              </div>
+              }/>
+            <Route path="/about"
+             element =  {<About />} />
+            <Route path="/login"
+              element = {<Login showAlert={showAlert} mode={mode}/>} />
+            <Route path="/signup"
+              element = {<SignUp showAlert={showAlert} mode={mode}/>} />
+            <Route path="/chat"
+              element = {<ChatDashboardDemo />} />
+        </Routes>
 
-      <Footer mode={mode}/>
-    </div>
-  </Router> 
+        <Footer mode={mode}/>
+      </div>
+    </Router> 
+    </ChatProvider>
   );
 }
 

@@ -46,6 +46,11 @@ function Header(props) {
                 About
               </Link>
             </li>
+            <li className="nav-item ">
+              <Link className="nav-link text-white h1" to="/chat">
+                Chat
+              </Link>
+            </li>
           </ul>
           <div className="form-check form-switch">
             <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" onClick={props.toggle}/>
